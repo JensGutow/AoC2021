@@ -1,0 +1,60 @@
+import itertools
+import time
+
+test = [1, 4, 5, 6, 7, 10, 11, 12, 15, 16, 19]
+
+# (0), <1, 4, 5, 6, 7, 10, 11, 12, 15, 16, 19, (22)
+# (0), 1, 4, 5, 6, 7, 10, 12, 15, 16, 19, (22)
+# (0), 1, 4, 5, 7, 10, 11, 12, 15, 16, 19, (22)
+# (0), 1, 4, 5, 7, 10, 12, 15, 16, 19, (22)
+# (0), 1, 4, 6, 7, 10, 11, 12, 15, 16, 19, (22)
+# (0), 1, 4, 6, 7, 10, 12, 15, 16, 19, (22)
+# (0), 1, 4, 7, 10, 11, 12, 15, 16, 19, (22)
+# (0), 1, 4, 7, 10, 12, 15, 16, 19, (22)
+
+def get_puzzle(file_name):
+    p = []
+    with open(file_name) as f:
+        p = [int(i) for i in f.read().split()] 
+        p.append(0)
+        p.append(max(p)+3)
+        p.sort()
+    return p
+
+def count_def(l, diff):
+    c = 0
+    for i in range(len(l)-1):
+        d = l[i+1]-l[i]
+        if d==diff:
+            c += 1
+    return c
+
+
+
+p = get_puzzle("tag_10.txt")
+
+d1 = count_def(p,1)
+d3 = count_def(p,3)
+print((d1) *(d3))
+
+xs = p
+DP = {}
+
+def dp(i):
+    if i==len(xs)-1:
+        return 1
+    if i in DP:
+        return DP[i]
+    ans = 0
+    for j in range(i+1, len(xs)):
+        if xs[j] - xs[j] <= 3:
+            ans += dp(j)
+    DP[i] = ans
+    return ans
+
+print(dp(0))
+#print(time.perf_counter() - start)
+
+
+start =time.perf_counter()
+end = start - time.perf_counter()
